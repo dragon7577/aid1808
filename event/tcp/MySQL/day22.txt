@@ -1,0 +1,146 @@
+表字段操作
+ 1，添加字段
+     语法  alter table 表名 add 字段名 数据类型;
+   alter table 表名 add 字段名 数据类型;
+   alter table 表名 add 字段名 数据类型 first;
+   alter table 表名 add 字段名 数据类型 after 字段名;
+ 2，删除字段 drop
+   alter table 表名 drop 字段名;
+ 3,修改数据类型 modify
+   alter table 表名 modify 字段名 新数据类型;
+ 4,表重命名  rename
+   alter table 原表名 rename 新表名;
+ 5,字符类型宽度为显示宽度区别
+   1，数值类型宽度为显示宽度，只用于select查询时显示，和存储无关，
+      可用zerofill查看效果
+   2，字符类型宽度超过之后无法存储
+
+1.删除表记录 delete
+    1. delete from 表名 where 条件;
+      ## 不加where全删
+2.更改表记录 update
+    1. update 表名 set 字段1=值1，字段2=值2 where 条件;
+      ## 不加where全改
+
+
+枚举类型
+ 1.单选：enum(值1，值2，值3...)
+ 2.多选：set(值1，值2，值3...)
+     ## 
+日期时间类型
+  1. date:"YYYY-MM-DD"
+  2. time:"HH:MM:SS"
+  3. datetime:"YYYY-MM-DD HH:MM:SS"    不给值默认返回NULL
+  4. timestamp:"YYYY-MM-DD HH:MM:SS"   不给值默认返回当前系统时间
+
+日期时间函数
+  1.now():     返回当前时间
+  2.curdate(): 返回日期
+  3.curtime(): 返回时间
+
+  4.year(date):取出年份
+  5.date(date):取出日期
+  6.time(date):取出时间
+
+ 日期时间运算
+  1.语法格式
+    select * from 表名 where
+    字段名 运算符(时间-interval 时间间隔单位);
+
+   时间间隔单位：
+     1 day | 2 hour | 3 year | 3 month
+
+   select * from t7 where 
+   cztime>=(now()-interval 1 day);
+
+
+ 6,运算符操作
+  1.数值比较&&字符比较&&逻辑比较
+    1.数值比较：= != > >= < <=
+    2.字符比较：= !=
+    3.逻辑比较：and、or、between 值1 and 值2
+                where id between 100 and 200;
+		where id>=100 and id<=200;
+      范围内比较
+        1.where 字段名 in(值1，值2，....)
+        2.where 字段名 not in(值1，值2，...)
+        
+	NULL：空值，只能用is 、is not 去匹配
+	""  : 空字符串，用 = 、!= 去匹配
+      模糊查询 like
+      1.where 字段名 like 表达式
+      2.表达式
+        %: 匹配0到多个字符
+	_: 匹配1个字符
+	## 名字中包含2个字符及以上的
+	select * from hero where name like "_%_";
+	##  
+	select * from hero where name like "_%";
+	select * from hero where name like "___";
+	select * from hero where name like "赵%";
+7,SQL 查询
+  1.总结
+    select ...聚合函数 from 表名
+    1、where ...
+    2、group by ...
+    3、having ...
+    4、order by ...
+    5、limit ...;
+  2.order by : 给查询结果进行排序
+    1、... order by 字段名 ASC(升序)/DESC(降序)
+    2、示例
+      1、将英雄按防御值从高到低排序
+         select * from sanguo order by fangyu desc;
+  3.limit(永远放在SQL语句最后写)
+    1、limit n   : 显示n条记录
+    2、limit m,n : 从第m+1条记录开始，显示n条
+       limit 2,3 : 显示 3、4、5三条记录
+    3、示例
+    4、分页
+       每页显示5(m)条记录，显示第4(n)页的记录
+       limit 15,5
+       即  limit (4-1)*5,5
+       limit (n-1)*m,m
+  4.聚合函数
+	avg(字段)：平均值
+	max(字段)：最大值
+	min(字段)：最小值
+	sum(字段)：求和
+	count(字段)：统计该字段记录的条数
+	select max(gongji) from sanguo;
+	select count(id),count(name) from sanguo；
+         NULL不会被统计
+  5.group by:分组
+     select country,avg(gongji) from sanguo group by country; 
+         分组-->聚合-->去重
+     注意：group by后字段名必须要为select后的字段
+           如果查询字段和group by 后的字段不一致，
+	   则对该字段进行聚合后处理(聚合函数)
+  6.having:对分组聚合后的结果进行进一步筛选
+      select country,avg(gongji) from sanguo 
+      group by country 
+      having avg(gongji)>105;
+      注意：having 语句通常与group by 语句联合使用
+            having 语句存在弥补了where关键字不能与聚合函数联合使用的不足，
+	    where 只能操作表中实际存在的字段，having操作的死聚合函数生成
+	    的显示列
+
+homework
+select user_id,count(comment_id) from comment 
+group by user_id 
+order by count(comment_id) desc 
+limit 10;
+
+
+
+
+
+
+
+
+
+
+
+
+
+

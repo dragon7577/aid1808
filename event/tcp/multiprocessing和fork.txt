@@ -1,0 +1,45 @@
+multiprocessing
+  Process 
+          Process(target=*,name=*,args=(*,),kwargs={})
+	    p.start()
+	    p.join([timeout])
+	    p.name
+	    p.pid
+	    p.daemon
+	    p.is_alive()
+  Pool
+          Pool(processes)
+	    pool.apply_async(func,args,kwds)
+	    pool.close()
+	    pool.join()
+	    pool.map(func,iter)
+  Pipe
+          fd1,fd2 = Pipe(duplex = True)
+	  fd.send()
+	  fd.recv()
+  Queue
+          q = Queue(maxsize = 0)
+	  q.put(data,[block,timeout])
+	  q.get([block,timeout])
+	  q.full()
+	  q.empty()
+	  q.qsize()
+	  q.close()
+
+fork
+import os 
+pid = os.fork()
+os.getpid()
+os.getppid()
+os._exit(status)
+sys.exit([status])
+避免僵尸进程
+一、  pid,status = os.wait()
+
+      pid,status = os.waitpid(pid,option)      
+             pid：-1   >0
+          option: 0    WNOHANG 
+二、  创建二级子进程
+        1.父进程创建子进程等待子进程退出
+	2.子进程再创建二级子进程然后退出
+	3.二级子进程成为孤儿，和原来父进程各执行任务
